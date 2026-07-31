@@ -6,6 +6,8 @@
 - **@shikijs/stream**: Code block syntax highlighting via markstream-vue integration
 - **element-plus**: UI component library for Vue 3
 - **stream-markdown**: Markdown parsing engine used by markstream-vue
+- **@vueuse/core**: Vue composition utilities for title switching and browser APIs
+- **@supabase/supabase-js**: Supabase client for Edge Function communication
 
 ## Architecture
 - Single-page chat interface with streaming AI responses

@@ -2,6 +2,7 @@
 import { ref, nextTick } from 'vue'
 import MarkStream from 'markstream-vue'
 import { requestLLMStream } from '../services/ai'
+import { useTitleNotification } from '../composables/useTitleNotification'
 
 interface ChatMessage {
   id: string
@@ -12,6 +13,9 @@ interface ChatMessage {
 const messages = ref<ChatMessage[]>([])
 const inputValue = ref('')
 const isLoading = ref(false)
+
+// 标题通知功能
+const { requestPermission, triggerNotification } = useTitleNotification()
 
 function scrollToBottom() {
   const container = document.querySelector('.chat-messages')
@@ -58,6 +62,9 @@ async function handleSend() {
       },
       { model: 'deepseek-v3.2' }
     )
+
+    // AI 回复完成后触发通知
+    triggerNotification('AI 已回复您的消息，快来查看吧！')
   } catch (error) {
     console.error('AI request failed:', error)
     assistantMsg.content = `❌ 请求失败: ${error instanceof Error ? error.message : '未知错误'}`
@@ -67,6 +74,9 @@ async function handleSend() {
     scrollToBottom()
   }
 }
+
+// 组件挂载时请求通知权限
+requestPermission()
 </script>
 
 <template>
