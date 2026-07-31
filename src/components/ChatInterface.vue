@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
 import MarkStream from 'markstream-vue'
+import { requestLLMStream } from '../services/ai'
 
 interface ChatMessage {
   id: string
@@ -10,47 +11,7 @@ interface ChatMessage {
 
 const messages = ref<ChatMessage[]>([])
 const inputValue = ref('')
-
-// Mock SSE stream simulation
-async function simulateStreamResponse(userMessage: string) {
-  const assistantMsg: ChatMessage = {
-    id: Date.now().toString(),
-    role: 'assistant',
-    content: ''
-  }
-  messages.value.push(assistantMsg)
-
-  // Simulate streaming chunks
-  const mockResponse = `你好！我是AI助手。
-
-## 关于你的问题
-
-你提到了 **${userMessage}**，这是一个很好的话题。
-
-### 技术要点
-
-\`\`\`typescript
-// 示例代码
-function hello() {
-  console.log("Hello World")
-}
-\`\`\`
-
-- 第一点：流式渲染
-- 第二点：Markdown 解析
-- 第三点：代码高亮
-
-希望这对你有帮助！`
-
-  const chunks = mockResponse.split('')
-  for (let i = 0; i < chunks.length; i++) {
-    await new Promise(resolve => setTimeout(resolve, 20))
-    assistantMsg.content += chunks[i]
-  }
-
-  await nextTick()
-  scrollToBottom()
-}
+const isLoading = ref(false)
 
 function scrollToBottom() {
   const container = document.querySelector('.chat-messages')
@@ -60,7 +21,7 @@ function scrollToBottom() {
 }
 
 async function handleSend() {
-  if (!inputValue.value.trim()) return
+  if (!inputValue.value.trim() || isLoading.value) return
 
   const userMsg: ChatMessage = {
     id: Date.now().toString(),
@@ -68,19 +29,53 @@ async function handleSend() {
     content: inputValue.value
   }
   messages.value.push(userMsg)
-  const userInput = inputValue.value
   inputValue.value = ''
+  isLoading.value = true
 
   await nextTick()
   scrollToBottom()
 
-  // Simulate AI response with streaming
-  await simulateStreamResponse(userInput)
+  // Create assistant message placeholder
+  const assistantMsg: ChatMessage = {
+    id: (Date.now() + 1).toString(),
+    role: 'assistant',
+    content: ''
+  }
+  messages.value.push(assistantMsg)
+
+  try {
+    // Build messages array for API
+    const apiMessages = messages.value.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }))
+
+    // Call real AI API with streaming
+    await requestLLMStream(
+      apiMessages,
+      (chunk) => {
+        assistantMsg.content += chunk
+      },
+      { model: 'deepseek-v3.2' }
+    )
+  } catch (error) {
+    console.error('AI request failed:', error)
+    assistantMsg.content = `❌ 请求失败: ${error instanceof Error ? error.message : '未知错误'}`
+  } finally {
+    isLoading.value = false
+    await nextTick()
+    scrollToBottom()
+  }
 }
 </script>
 
 <template>
   <div class="chat-container">
+    <div class="chat-header">
+      <h2>🤖 AI 智能助手</h2>
+      <span class="model-badge">DeepSeek V3.2</span>
+    </div>
+    
     <div class="chat-messages">
       <div v-for="msg in messages" :key="msg.id" class="message-item" :class="msg.role">
         <div class="avatar">
@@ -95,6 +90,10 @@ async function handleSend() {
           <span v-else>{{ msg.content }}</span>
         </div>
       </div>
+      
+      <div v-if="isLoading" class="loading-indicator">
+        <span>AI 正在思考...</span>
+      </div>
     </div>
 
     <div class="input-area">
@@ -102,10 +101,13 @@ async function handleSend() {
         v-model="inputValue"
         placeholder="输入消息..."
         @keyup.enter="handleSend"
+        :disabled="isLoading"
         clearable
       >
         <template #append>
-          <el-button @click="handleSend" type="primary">发送</el-button>
+          <el-button @click="handleSend" type="primary" :loading="isLoading">
+            {{ isLoading ? '发送中...' : '发送' }}
+          </el-button>
         </template>
       </el-input>
     </div>
@@ -118,6 +120,30 @@ async function handleSend() {
   display: flex;
   flex-direction: column;
   background: var(--el-bg-color);
+}
+
+.chat-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--el-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--el-fill-color-lighter);
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--el-text-color-primary);
+}
+
+.model-badge {
+  padding: 4px 12px;
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .chat-messages {
@@ -155,6 +181,13 @@ async function handleSend() {
 
 .message-item.user .message-content {
   text-align: right;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 12px;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
 }
 
 .input-area {
