@@ -1,0 +1,38 @@
+# WebSearch 完整正文
+# query: markstream-vue streaming markdown renderer Vue3 2025 2026
+# index: 9
+
+Markdown渲染 - 文档展示利器
+学习目标
+完成本章学习后，你将能够：
+理解Markdown渲染的原理和使用场景 在Vue 3项目中集成Markdown渲染器 实现Markdown内容的实时预览 添加代码高亮和自定义样式 处理Markdown中的安全问题
+前置知识
+学习本章内容前，你需要掌握：
+Vue基础  - Vue的基本概念 组合式API  - Composition API基础 基础的Markdown语法
+问题引入
+实际场景
+小王在开发一个技术博客系统时，遇到了以下需求：
+文章展示 ：需要将Markdown格式的文章渲染成HTML显示 实时预览 ：编辑器需要实时预览Markdown效果 代码高亮 ：文章中的代码需要语法高亮 自定义样式 ：需要自定义Markdown渲染后的样式 安全防护 ：防止XSS攻击，过滤危险的HTML标签 扩展功能 ：支持表格、任务列表、数学公式等扩展语法
+小王想知道：有哪些好用的Markdown渲染库可以在 Vue 中使用？
+为什么需要Markdown渲染器
+Markdown是一种轻量级标记语言，广泛用于技术文档、博客、论坛等场景：
+易读易写 ：语法简单，纯文本格式 跨平台 ：可以在任何文本编辑器中编辑 版本控制友好 ：纯文本便于Git管理 格式统一 ：渲染后样式一致 功能丰富 ：支持标题、列表、代码、表格等
+常用的Markdown渲染库：
+marked ：轻量快速，最流行 markdown-it ：功能强大，可扩展 remark ：基于插件系统，灵活
+核心概念
+概念1：使用marked（推荐）
+为什么选择marked？
+轻量级（~5KB gzipped） 速度快 兼容性好 易于使用
+安装
+# 安装marked pnpm add  marked   # 安装代码高亮库 pnpm add  highlight.js   # 安装DOMPurify（防XSS） pnpm add  dompurify 
+一键获取完整项目代码 bash
+1 2 3 4 5 6 7 8
+概念2：基础使用
+最简单的示例
+<script setup> import { ref, computed } from 'vue'; import { marked } from 'marked';  const markdown = ref(` # 欢迎使用Markdown  这是一个**粗体**文本，这是一个*斜体*文本。  ## 代码示例  \`\`\`javascript const hello = 'Hello World'; console.log(hello); \`\`\`  ## 列表  - 项目1 - 项目2 - 项目3 `);  // 将Markdown转换为HTML const html = computed(() => {   return marked(markdown.value); }); </script>  <template>   <div class="markdown-body" v-html="html"></div> </template>  <style> .markdown-body {   padding: 20px;   line-height: 1.6; } </style> 
+一键获取完整项目代码 vue
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
+实战应用
+1. 创建Markdown渲染组件
+完整的可复用组件
+<!-- components/MarkdownRenderer.vue --> <script setup> import { computed } from 'vue'; import { marked } from 'marked'; import DOMPurify from 'dompurify'; import hljs from 'highlight.js'; import 'highlight.js/styles/github-dark.css';  // 代码高亮主题  /**  * Markdown渲染组件  * @param {String} content - Markdown内容  * @param {Boolean} sanitize - 是否清理HTML（防XSS）  */ const props = defineProps({   content: {     type: String,     required: true   },   sanitize: {     type: Boolean,     default: true   } });  // 配置marked marked.setOptions({   // 启用GitHub风格的Markdown   gfm: true,   // 启用表格   tables: true,   // 启用换行符   breaks: true,   // 代码高亮   highlight: (code, lang) => {     if (lang && hljs.getLanguage(lang)) {       try {         return hljs.highlight(code, { language: lang }).value;       } catch (err) {         console.error('代码高亮失败:', err);       }     }     return hljs.highlightAuto(code).value;   } });  // 渲染Markdown const html = computed(() => {   if (!props.content) return '';      // 将Markdown转换为HTML   let htmlContent = marked(props.content);      // 清理HTML，防止XSS攻击   if (props.sanitize) {     htmlContent = DOMPurify.sanitize(htmlContent, {       // 允许的标签       ALLOWED_TAGS: [         'h1', 'h2', 'h3', 'h4', 'h5', 'h6',         'p', 'br', 'hr',         'strong', 'em', 'del', 'code', 'pre',         'ul', 'ol', 'li',         'blockquote',         'a', 'img',         'table', 'thead', 'tbody', 'tr', 'th', 'td'       ],       // 允许的属性       AL...

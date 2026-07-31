@@ -1,0 +1,27 @@
+# WebSearch 完整正文
+# query: vue-element-plus-x npm AI对话组件 ElementPlus扩展 2025
+# index: 3
+
+如果你正在寻找一种快速、优雅的方式来构建一个类似 ChatGPT 的 AI 对话界面，那么  Element Plus X  绝对值得一试。它是基于 Vue 3 和 Element Plus 的扩展组件库，专门为 AI 对话场景设计，提供了开箱即用的消息列表（BubbleList）、智能输入框（Sender）、会话管理、流式响应支持等组件。
+本教程将带你一步步使用 Element Plus X 搭建一个完整的 AI 对话应用，并直接调用  DeepSeek 的开放 API （无需自己写后端）。你将在半小时内拥有一个功能完善的 AI 聊天界面，并体验流式逐字输出、Markdown 渲染等高级特性。
+特别提醒 ：本教程为了快速演示，采用前端直接调用 DeepSeek API 的方式。 这会暴露你的 API Key，存在安全风险，请勿在生产环境中使用！  生产环境建议通过后端代理转发请求。后文会给出安全最佳实践。
+1. 环境准备 #
+确保你的开发环境满足以下要求：
+Node.js 16.0 或更高版本 包管理工具（推荐 pnpm，也可以用 npm 或 yarn）
+使用 Vite 创建一个新的 Vue 3 项目（如果你已经有现有项目，可以跳过此步）：
+Copy
+pnpm  create vite ai-chat-demo  --template  vue  cd  ai-chat-demo  pnpm install
+2. 安装 Element Plus X #
+Element Plus X 需要  element-plus  作为对等依赖，所以需要同时安装两者：
+Copy
+pnpm add  element-plus vue-element-plus-x 
+在  main.js  中引入 Element Plus 的样式（Element Plus X 的组件已内置样式，无需单独引入）：
+Copy
+import {  createApp  } from 'vue' import  App  from './App.vue' import 'element-plus/dist/index.css' // 引入 Element Plus 基础样式 createApp ( App ) . mount ( '#app' )
+3. 基础对话界面搭建 #
+我们将创建一个名为  ChatView.vue  的组件，它包含两个核心部分：
+BubbleList ：用于展示对话气泡列表 Sender ：用于输入和发送消息
+3.1 组件结构 #
+创建  src/components/ChatView.vue ，写入以下基础模板：
+Copy
+<template>   <div class="chat-container">     <!-- 消息列表 -->     <BubbleList       ref="bubbleListRef"       :list="messageList"       :max-height="600"       :virtual-scroll="messageList.length > 100"       :item-size="80"     >       <template #loading>         <Thinking :loading="isLoading" :error="error" />       </template>     </BubbleList>      <!-- 输入区域 -->     <Sender       v-model="inputText"       @send="handleSend"       :allow-speech="true"       placeholder="输入消息，Enter 发送，Shift + Enter 换行"       :disabled="isLoading"     />   </div> </template>  <script setup> import { ref } from 'vue' import { BubbleList, Sender, Thinking } from 'vue-element-plus-x'  // 消息列表 const messageList = ref([   {     key: 1,     role: 'ai',     content: '你好！我是 DeepSeek AI 助手，有什么可以帮你的吗？',     avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',     isMarkdown: true,     typing: true,   }, ])  const inputText = ref('') const bubbleListRef = ref(null) const isLoading = ref(false)  // 加载状态 const error = ref(null)       // 错误信息  // 当前正在接收的流消息 ID let currentAiMessageKey = null  // 处理发送消息 const handleSend = async () => {   const content = inputText.value.trim()   if (!content || isLoading.value) return    // 添加用户消息   const userMessage = {     key: Date.now(),     role: 'user',     content: content,     avatar: 'https://avatars.githubusercontent.com/u/76239030?v=4',   }   messageList.value.push(userMessage)   inputText.value = ''      // 创建一条空的 AI 消息，准备接收流式内容   currentAiMessageKey = Date.now() + 1   messageList.value.push({     key: currentAiMessageKey,     role: 'ai',     content: '',     avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',     isMarkdown: true,     typing: true,   })      scrollToBottom()      // 开始调用 DeepSeek API   isLoading.value = true   error.value = null      try {     // 构建请求参数     const...

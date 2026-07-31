@@ -1,0 +1,49 @@
+# WebSearch 完整正文
+# query: markstream-vue streaming markdown renderer Vue3 2025 2026
+# index: 7
+
+前天我们介绍了  Ant Design 发布的 React 版 AI 渲染器（X-Markdown） ，有 Vue 的小伙伴在后台问：“Vue 呢？Vue 什么时候有？”
+别急， Vue 其实已经有了！ ，它就是  markstream-vue 。
+此前还被  Vue 的作者尤雨溪（Evan You）  亲自转发推荐，彻底火出了圈。
+什么是 markstream-vue？
+简单来说，这是一个 专门为 AI 流式输出打造 的 Vue Markdown 渲染组件。
+它的作者是开源大佬 Simon He。这款组件诞生的初衷，就是为了解决我们在开发 AI 应用时遇到的那些痛点。
+并不是简单的把 Markdown 转成 HTML，而是针对 AI 的“打字机效果”做了深度的优化，让用户体验更加流畅，目前在 Github 有 1.7K Star。
+几个核心杀功能：
+1. 拒绝闪烁，丝滑流畅
+普通的 Markdown 组件，每次收到新字符，都要把整个文档重新算一遍。这就导致了屏幕不停地闪，非常伤眼睛。
+markstream-vue  采用了 增量渲染 技术。简单说，它只更新变动的那一小部分内容。
+无论 AI 吐字有多快，界面都能保持稳定，像原生 App 一样丝滑。
+2. 这里的 Mermaid 图表，是活的！
+很多 AI 模型（比如 DeepSeek、Claude）都喜欢用 Mermaid 画流程图。
+以前的组件，必须等 AI 把整个图的代码写完，才能渲染出图片。
+但在  markstream-vue  里，图表是 渐进式渲染 的！
+随着代码的生成，图表会实时变化。这种看着 AI “当场作画”的感觉，真的非常酷。
+3. 代码块不再卡顿
+对于程序员来说，代码块的高亮是刚需。但如果代码太长，渲染起来会很卡。
+这个组件集成了 Monaco Editor（就是 VS Code 的核心编辑器）和 Shiki。
+它支持 流式 Diff 代码块 。这意味着，即使是大段的代码生成，也能做到实时高亮，而且支持代码对比功能。
+4. 专为长文档优化
+如果你的对话很长，网页很容易变卡，甚至崩。
+markstream-vue  内置了 虚拟滚动 技术。
+不管文档有多长，它只渲染你看得见的那部分。内存占用极低，性能稳如老狗。
+怎么用？
+使用起来非常简单，几乎是开箱即用。
+第一步，安装它：
+pnpm add markstream-vue
+AI写代码 go
+运行
+第二步，在你的 Vue 组件里引入：
+<script setup>
+import  { MarkdownRender } from  'markstream-vue'
+import 'markstream-vue/index.css'
+const  content =  '# Hello AI'
+</script>
+<template>
+  <MarkdownRender :content= "content"  />
+</template>
+AI写代码 go
+运行
+搞定！你就拥有了一个 ChatGPT 同款的渲染界面。
+如果你正在用 Vue 开发 AI 相关产品，或者打算给现有系统接入大模型，那么  markstream-vue  可以尝试下！如果有帮助，也可以给大佬点个 Star，Vue 的生态也需要这样的好项目！
+GitHub 地址： https://github.com/Simon-He95/markstream-vue

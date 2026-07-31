@@ -1,0 +1,101 @@
+# WebSearch 完整正文
+# query: markstream-vue streaming markdown renderer Vue3 2025 2026
+# index: 3
+
+markstream- vue 部署指南：从开发到生产的完整工作流
+【免费下载链接】markstream-vue A Vue 3 renderer specifically built for AI-powered streaming Markdown: Monaco incremental, Mermaid progressive, and KaTeX formula speed, with real-time updates and no jitter, ready to use out of the box.  项目地址: https://gitcode.com/gh_mirrors/vu/markstream-vue 
+想要构建高性能的AI聊天界面或流式文档应用？ markstream-vue  是你的终极解决方案！这款专为Vue 3设计的流式 Markdown 渲染器，能帮你轻松实现无闪烁的实时内容更新。本指南将带你从零开始，完成markstream-vue的完整部署流程，从开发环境搭建到生产环境优化，让你快速掌握这个强大的流式Markdown渲染工具。
+     为什么选择markstream-vue？
+在开始 部署 之前，先了解一下markstream-vue的核心优势：
+功能特点
+传统Markdown渲染器
+markstream-vue
+流式内容处理 全量重渲染，容易闪烁 虚拟窗口 + 增量批次，无闪烁
+大代码块支持 重新高亮速度慢 Monaco流式更新 + 可选Shiki
+图表渲染 解析/渲染阻塞主线程 Mermaid渐进式渲染，不阻塞
+自定义组件 插槽有限，扩展困难 Markdown内嵌Vue组件，类型化节点
+长文档性能 内存峰值高，滚动卡顿 可配置live-node上限，滚动稳定
+     第一步：环境准备与安装
+系统要求检查
+确保你的开发环境满足以下要求：
+Node.js ：版本 18.0.0 或更高 包管理器 ：pnpm（推荐）、npm 或 yarn Vue版本 ：Vue 3.2.0 或更高
+项目创建与初始化
+如果你还没有Vue项目，先创建一个新的：
+# 使用Vite创建Vue项目
+npm create vue@latest my-markstream-app
+cd  my-markstream-app
+bash
+核心包安装
+markstream-vue采用模块化设计，你可以根据需要安装不同的功能模块：
+# 基础安装（必需）
+pnpm add markstream-vue
+# 轻量级代码高亮（文档站点推荐）
+pnpm add stream-markdown
+# 完整功能安装（AI聊天界面推荐）
+pnpm add markstream-vue stream-monaco mermaid katex
+bash
+     第二步：基础配置与快速启动
+CSS 样式导入
+正确的CSS导入顺序至关重要，确保在CSS重置之后导入markstream-vue的样式：
+/* 在你的主CSS文件中 */
+@import 'modern-css-reset' ;
+@tailwind  base;  /* 如果使用Tailwind */
+@import 'markstream-vue/index.css'  layer(components);
+css
+基础使用示例
+在Vue组件中快速集成markstream-vue：
+<template>   <MarkdownRender     :content="markdownContent"     custom-id="my-app"     :max-live-nodes="320"   /> </template>  <script setup> import MarkdownRender from 'markstream-vue' import 'markstream-vue/index.css'  const markdownContent = `# 欢迎使用markstream-vue  这是一个**流式Markdown**渲染示例： - 支持实时更新 - 无闪烁体验 - 高性能渲染` </script> 
+vue
+⚡ 第三步：流式内容集成
+SSE/WebSocket流式接入
+markstream-vue的核心优势是流式内容处理，以下是AI聊天场景的典型配置：
+import  { ref }  from 'vue'
+const  content =  ref ( '' )
+const  final =  ref ( false )
+// SSE事件监听
+eventSource. onmessage  =  ( event ) =>  {
+  content. value  += event. data
+}
+eventSource. addEventListener ( 'done' ,  () =>  {
+  final. value  =  true
+})
+javascript
+运行
+<MarkdownRender   :content="content"   :final="final"   :max-live-nodes="0"   :batch-rendering="true"   :render-batch-size="16"   :render-batch-delay="8"   :typewriter="true" /> 
+vue
+性能优化配置
+根据不同的使用场景，调整性能参数：
+场景
+推荐配置
+说明
+AI聊天界面 max-live-nodes="0" 打字机效果，适合短消息流
+长文档浏览 max-live-nodes="320" 虚拟化窗口，滚动流畅
+代码审查 启用Monaco 支持diff和语法高亮
+数学公式 启用KaTeX 高质量的数学公式渲染
+     第四步：高级功能配置
+Mermaid图表支持
+启用渐进式Mermaid图表渲染：
+import  { enableMermaid }  from 'markstream-vue'
+// 安装mermaid后启用
+enableMermaid ()
+javascript
+运行
+KaTeX数学公式
+启用数学公式支持：
+import  { enableKatex }  from 'markstream-vue'
+import 'katex/dist/katex.min.css'
+enableKatex ()
+javascript
+运行
+自定义组件映射
+在Markdown中嵌入自定义Vue组件：
+import  { setCustomComponents }  from 'markstream-vue'
+setCustomComponents ( 'docs' , {
+CALLOUT :  () => import ( './components/Callout.vue' ),
+WARNING :  () => import ( './components/Warning.vue' ),
+})
+javascript
+运行
+    ️ 第五步：生产环境部署
+构建优化
+使...

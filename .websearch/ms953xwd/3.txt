@@ -1,0 +1,54 @@
+# WebSearch 完整正文
+# query: markstream-vue streaming markdown renderer Vue3 2025 2026
+# index: 4
+
+如何快速上手markstream-vue：从零开始的10分钟入门指南
+【免费下载链接】markstream-vue A Vue 3 renderer specifically built for AI-powered streaming Markdown: Monaco incremental, Mermaid progressive, and KaTeX formula speed, with real-time updates and no jitter, ready to use out of the box.  项目地址: https://gitcode.com/gh_mirrors/vu/markstream-vue 
+markstream-vue是一款专为AI驱动的流式Markdown打造的Vue 3渲染器，具备Monaco增量更新、Mermaid渐进式渲染和KaTeX公式快速处理能力，支持实时更新且无抖动，开箱即可使用。本指南将帮助你在10分钟内完成从安装到基本使用的全过程，让你快速体验这款强大工具的魅力。
+     1. 一键安装：30秒完成环境配置
+安装markstream-vue非常简单，你可以根据自己的包管理器选择以下命令之一：
+pnpm add markstream-vue
+# 或者
+npm install markstream-vue
+# 或者
+yarn add markstream-vue
+bash
+如果你需要支持代码块、图表和数学公式等更丰富的功能，可以安装推荐的依赖组合：
+pnpm add markstream-vue stream-monaco mermaid katex 
+bash
+✨ 2. 快速开始：5分钟实现基础渲染
+安装完成后，你可以通过一个简单的Vue组件快速体验markstream-vue的基础功能。创建一个新的Vue组件，并添加以下代码：
+<script setup lang="ts"> import MarkdownRender from 'markstream-vue'  const md = `# Hello World\n\nThis is **bold** and this is *italic*.` </script>  <template>   <MarkdownRender :content="md" /> </template> 
+vue
+这段代码会渲染出一个包含标题、粗体和斜体文本的Markdown内容。如果你想体验更多功能，可以尝试添加Mermaid图表和D2流程图：
+<script setup lang="ts"> import MarkdownRender from 'markstream-vue'  const md = `# Hello world\n\nTry a simple Mermaid:\n\n\`\`\`mermaid\ngraph LR\nA-->B\n\`\`\`\n\nTry a simple D2:\n\n\`\`\`d2\ndirection: right\nClient -> API: request\nAPI -> DB: query\nDB -> API: rows\nAPI -> Client: response\n\`\`\`` </script>  <template>   <MarkdownRender :content="md" /> </template> 
+vue
+⚙️ 3. 高级配置：2分钟定制你的渲染器
+markstream-vue提供了多种配置选项，让你可以根据需要定制渲染效果。以下是一些常用的配置：
+深色模式切换
+你可以通过 is-dark 属性轻松切换深色模式：
+<MarkdownRender :content="md" :is-dark="true" /> 
+vue
+自定义ID
+为渲染器指定一个自定义ID，方便在CSS中进行样式定制：
+<MarkdownRender :content="md" custom-id="my-markdown-renderer" /> 
+vue
+CSS导入
+虽然markstream-vue已经内置了默认样式，但你可以通过显式导入CSS来控制样式顺序：
+@import 'markstream-vue/index.css'  layer(components); 
+css
+如果你使用了KaTeX数学公式，还需要导入KaTeX的CSS：
+import 'katex/dist/katex.min.css'
+ts
+     4. 常见问题与解决方案
+数学公式不渲染
+如果数学公式没有正确渲染，请检查是否安装了 katex 并导入了其CSS文件。
+Monaco编辑器显示空白
+如果Monaco编辑器显示空白，请验证worker打包配置和浏览器环境检测。
+样式异常
+如果渲染样式出现异常，请参考故障排除指南。
+     5. 深入学习资源
+完成了基础入门后，你可以通过以下资源进一步学习markstream-vue的高级功能：
+完整使用指南：了解 content 和 nodes 属性的区别与应用 AI聊天流集成：学习如何在聊天界面中实现流式渲染 组件自定义：自定义节点渲染方式
+通过本指南，你已经掌握了markstream-vue的基本使用方法。这款强大的Markdown渲染器将为你的Vue应用带来高效、流畅的Markdown渲染体验，特别是在AI驱动的内容生成场景中表现出色。现在就开始探索吧！
+【免费下载链接】markstream-vue A Vue 3 renderer specifically built for AI-powered streaming Markdown: Monaco incremental, Mermaid progressive, and KaTeX formula speed, with real-time updates and no jitter, ready to use out of the box.  项目地址: https://gitcode.com/gh_mirrors/vu/markstream-vue

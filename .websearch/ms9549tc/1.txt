@@ -1,0 +1,26 @@
+# WebSearch 完整正文
+# query: vue-element-plus-x npm AI对话组件 ElementPlus扩展 2025
+# index: 2
+
+Element-Plus-X：基于Vue 3的AI交互组件库
+一、什么是Element-Plus-X？
+Element-Plus-X 是一个专门为AI应用场景设计的Vue 3组件库，可以理解为  “Element Plus的AI增强版” 。它在保留Element Plus优雅设计体系的同时，深度整合了现代AI应用所需的各种交互组件。
+核心定位 ：让前端开发者能够像搭建普通后台管理系统一样，快速构建复杂的AI交互界面。
+二、核心特性：为什么选择Element-Plus-X？
+2.1 专为AI设计的组件体系
+Element-Plus-X提供了一系列开箱即用的AI交互组件：
+智能聊天组件 ： Bubble 、 BubbleList 、 Conversations 多模态输入 ： Sender 组件支持文本、语音、文件上传 状态展示 ： Thinking 、 ThoughtChain 展示AI思考过程 辅助组件 ： Welcome 、 Prompts 、 FilesCard 等
+2.2 无缝的技术栈集成
+// 与主流技术栈完美兼容  Vue  3 +  TypeScript  +  Element Plus  +  Element - Plus - X
+运行项目并下载源码 javascript
+运行
+1 2
+2.3 企业级质量标准
+完整的TypeScript类型支持 严格的代码规范和测试覆盖 响应式设计，支持多端适配 丰富的自定义配置选项
+三、快速开始：15分钟搭建AI聊天界面
+3.1 安装与配置
+# 使用pnpm安装（推荐） pnpm add  vue-element-plus-x   # 或使用npm npm install  vue-element-plus-x   # 或使用yarn yarn add  vue-element-plus-x 
+运行项目并下载源码 bash
+1 2 3 4 5 6 7 8
+3.2 基础用法示例
+<template>   <div class="ai-chat-container">     <div class="chat-header">       <h2>智能AI助手</h2>     </div>          <BubbleList        :list="messageList"        :loading="isAIThinking"       class="message-area"     />          <Sender       @send="handleSendMessage"       @voice-record="handleVoiceInput"       :disabled="isAIThinking"       placeholder="请输入您的问题..."     />   </div> </template>  <script setup> import { ref } from 'vue'; import {    BubbleList,    Sender,    useRecord  } from 'vue-element-plus-x';  // 消息列表 const messageList = ref([   {     content: '您好！我是AI助手，有什么可以帮您的？',     role: 'assistant',     timestamp: new Date()   } ]);  // AI思考状态 const isAIThinking = ref(false);  // 语音识别Hook const { isRecording, startRecording, stopRecording } = useRecord();  // 处理发送消息 const handleSendMessage = async (content) => {   // 添加用户消息   messageList.value.push({     content,     role: 'user',     timestamp: new Date()   });      // 显示AI思考状态   isAIThinking.value = true;      try {     const response = await fetch('/api/ai/chat/completions', {       method: 'POST',       headers: {         'Content-Type': 'application/json',         'Authorization': 'Bearer your-token-here'       },       body: JSON.stringify({         model: 'deepseek-chat',         messages: [           {             role: 'user',             content: content           }         ],         stream: false       })     });          const data = await response.json();          // 添加AI回复     messageList.value.push({       content: data.choices[0].message.content,       role: 'assistant',       timestamp: new Date()     });        } catch (error) {     console.error('调用AI接口失败:', error);          // 添加错误消息     messageList.value.push({       content: '抱歉，我暂时无法处理您的请求，请稍后重试。',       role: 'assistant',       timestamp: new Date(),       isError: true     });   } finally {     isAIThinking.value = false;   } };  // 处理语音输入 const handleVoiceInput = async () => {   if (isRecording.value) {     const { transcript } = await stopRecording();     if (transcript) {       await handleSendMessage(transcript);     }   } else {     await startRecording();   } }; </script>  <style scoped> .ai-c...

@@ -1,0 +1,55 @@
+# WebSearch 完整正文
+# query: vue-element-plus-x npm AI对话组件 ElementPlus扩展 2025
+# index: 10
+
+文章目录
+Ⅰ. 基本介绍
+一、什么是组件 二、什么是ElementPlus组件库 其他组件
+Ⅱ. 快速入门
+一、安装 二、完整引入 三、测试
+Ⅲ. 学习ElementPlus常用组件
+一、Form表单组件
+1. 介绍 2. 基本使用 3. 表单校验 案例
+二、Card卡片组件 三、Table表格组件
+1. 介绍 2. 基础用法 3. 自定义列模版
+四、Tree树形组件
+1. 介绍 2. 基础用法 3. 自定义节点内容
+五、Dialog弹框组件 六、Menu菜单组件
+1. 介绍 2. 基础用法 3. 示例代码
+Ⅰ. 基本介绍
+一、什么是组件
+一个可复用的Vue实例、一段独立的  UI  界面，有自己的  HTML  +  CSS  +  JavaScript ，代码上体现在一个独立的  .vue  文件。
+< script setup > < / script > < template > < / template > < style lang = "scss"  scoped > < / style >
+AI写代码 javascript
+运行
+1 2 3
+二、什么是ElementPlus组件库
+官方文档
+ElementPlus  是由饿了么团队开发的。是一个基于  Vue3  开发 PC 端开源 UI 组件库，专为开发者提供了一套优雅而灵活的 UI 组件。它包含了各种常用的Web组件，如按钮、表单、导航等；以及高级组件，如日期选择器、对话框等。 ElementPlus  默认语言环境是中文，但可以通过指定  locale  属性来实现其他语言环境，如英文。总之， ElementPlus  提供了丰富的 PC 组件，有效地降低了开发难度。
+组件分类：
+基础组件 表单组件 数据展示 导航组件 反馈组件
+其他组件
+Ⅱ. 快速入门
+一、安装
+npm  i element-plus 
+AI写代码 bash
+1
+二、完整引入
+// 导入 ElementPlus 组件 import  ElementPlus  from 'element-plus' // 导入组件样式 import 'element-plus/dist/index.css' // 全局注册所有组件  app . use ( ElementPlus )
+AI写代码 javascript
+运行
+1 2 3 4 5 6 7
+三、测试
+以  Button  组件为例，在  App.vue  中测试：
+< el - button > Default < / el - button > < el - button type = "primary" > Primary < / el - button > < el - button type = "success" > Success < / el - button > < el - button type = "info" > Info < / el - button > < el - button type = "warning" > Warning < / el - button > < el - button type = "danger" > Danger < / el - button >
+AI写代码 javascript
+运行
+1 2 3 4 5 6
+Ⅲ. 学习ElementPlus常用组件
+一、Form表单组件
+https://element-plus.org/zh-CN/component/form.html
+1. 介绍
+表单包含  输入框 ， 单选框 ， 下拉选择 ， 多选框  等用户输入的组件。使用表单可以收集、验证和提交数据。
+2. 基本使用
+创建一个表单对象 form ，写上需要双向绑定到组件上的字段 在  <el-form>  表单组件中通过  :model 绑定表单对象 form 在  <el-form-item>  中的各个子组件比如  <el-input>  中 通过 v-model 绑定表单对象中要双向绑定的元素 ，比如  form.name
+< script setup > import {  reactive  } from 'vue' // 表单对象 const  form  = reactive ( { name : '' , region : '' , date1 : '' , date2 : '' , delivery : false , type : [ ] , resource : '' , desc : '' } ) // 提交 const onSubmit = ( ) => {        console . log ( 'submit!' ) } < / script > < template > < ! -- model :  表单数据对象     label - width :  标签的宽度，可使用 auto      style :  行内样式    -- > < el - form      : model = "form"      label - width = "auto"      style = "max-width: 600px" > < ! --  label :  标签文本  -- > < el - form - item label = "Activity name" > < ! --  v - model :  双向绑定，收集或设置表单数据  -- > < el - input v - model = "form.name" / > < / el - form - item > < el - form - item label = "Activity zone" > < ! --          下拉列表          placeholder :  占位提示文本        -- > < el - select         v - model = "form.region"          placeholder = "please select your zone" > < ! --            选项            label :  展示的文本            value :  同步到v - model的值          -- > < el - option           label = "Zone one"            value = "shanghai" / > < el - option           label = "Zone two"            value = "beijing" / > < / el - select > < / el - form - item > < el - form - item label = "Activity time" > < ! --  列 span :  占据的宽度份数，一行分为 24 份  -- > < el - col  : span = "11" > < ! --  日期选择器  -...

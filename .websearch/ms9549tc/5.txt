@@ -1,0 +1,49 @@
+# WebSearch 完整正文
+# query: vue-element-plus-x npm AI对话组件 ElementPlus扩展 2025
+# index: 6
+
+在一次开发中，小李接到一个重要的任务：将  Element Plus  中的时间组件根据团队的独特需求进行二次封装。他灵机一动，决定将这个 自定义组件 打包成一个 npm 包，以便团队的其他小伙伴们可以快速、方便地使用。接下来，让我们跟随小李的脚步，一同探索这个令人兴奋的过程吧！
+1. 初始化  npm  包
+小李首先在一个干净的 文件夹 中初始化项目。命令行窗口里，他轻松输入：
+npm  init 
+AI写代码 bash
+1
+根据提示填写包的名称、版本和描述，最终生成了一个  package .json 文件。
+2. 安装  Vue  3 和 Element Plus
+为了让组件有强大的动力，小李开始安装 Vue 3 和 Element Plus：
+npm install  vue  npm install  element-plus 
+AI写代码 bash
+1 2
+3. 创建组件
+接下来，小李在项目文件夹中创建一个  src  目录，并在其中新建一个  index.vue  文件，开始编写他的时间选择器组件：
+<!-- src/ByDatePicker/index.vue --> <template>     <el-date-picker v-model="timeValue" /> </template>  <script setup name="ByDataPicker"> import { ref, watch } from "vue";  const props = defineProps({     startTime: {         type: String,         default: "",     },     stopTime: {         type: String,         default: "",     }, });  const emit = defineEmits(["update:startTime", "update:stopTime"]); const timeValue = ref([]);  const install = () => {     let data = [props.startTime || "", props.stopTime || ""];     timeValue.value = data;     let start = data[0];     let stop = data[1];     emit("update:startTime", start);     emit("update:stopTime", stop); }; install(); //监听外部传递进来的的数据变化 watch(     () => props.startTime,     () => {         install();     } ); //监听数据变化 watch(     () => timeValue.value,     (val) => {         if (!val || val === null || val === "") {             val = ["", ""];         }         let start = val[0];         let stop = val[1];         emit("update:startTime", start);         emit("update:stopTime", stop);     } ); </script>  <style lang="scss" scoped></style> 
+AI写代码 vue3
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54
+小提示：记得组件中使用 ref watch 等关键字一定要进行 import 引入，否则打包后可就要报错了哦！
+4.配置入口文件
+为了让其他人能够轻松导入这个组件，小李在  src  目录下创建了一个  index.js  文件：
+// src/index.js import  ByDatePicker  from "./ByDatePicker/index.vue" ; export default  ByDatePicker ;
+AI写代码 javascript
+运行
+1 2 3 4
+5. 添加构建工具
+小李想要将组件打包成可以在其他项目中使用的格式，决定采用  Vite  作为构建工具。
+5.1 安装 Vite
+他快速安装 vite 和 @vitejs/plugin-vue  插件：
+npm install  --save-dev vite @vitejs/plugin-vue 
+AI写代码 bash
+1
+5.2 创建 Vite 配置文件
+小李又新建了一个 vite.config.js 文件，配置如下：
+// vite.config.js import {  defineConfig  } from "vite" ; import  vue  from "@vitejs/plugin-vue" ; export default defineConfig ( {      plugins : [ vue ( ) ] ,      build : {          lib : {              entry : "src/index.js" ,              name : "ByDatePicker" , fileName : ( format ) => ` by-date-picker. ${ format } .js ` , } ,          rollupOptions : { // 确保外部化处理那些你不想打包进库的依赖              external : [ "vue" , "element-plus" ] ,              output : {                  globals : {                      vue : "Vue" , "element-plus" : "ElementPlus" , } , } , } , } , } ) ;
+AI写代码 javascript
+运行
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+6.添加构建脚本
+在 package. json  中添加构建脚本：
+"scripts" : { "build" : "vite build" }
+AI写代码 json
+1 2 3
+7.构建组件
+终于，小李可以运行构建命令，生成编译后的组件代码：
+npm  run ...

@@ -1,0 +1,88 @@
+# WebSearch 完整正文
+# query: markstream-vue streaming markdown renderer Vue3 2025 2026
+# index: 5
+
+markstream-vue Monaco代码块完全指南：打造高性能的流式 代码编辑器
+【免费下载链接】markstream-vue A Vue 3 renderer specifically built for AI-powered streaming Markdown: Monaco incremental, Mermaid progressive, and KaTeX formula speed, with real-time updates and no jitter, ready to use out of the box.  项目地址: https://gitcode.com/gh_mirrors/vu/markstream-vue 
+想要在Vue 3应用中实现像VS Code一样流畅的代码编辑器体验吗？✨ markstream-vue的Monaco代码块功能就是你的终极 解决方案 ！作为专为AI流式Markdown渲染设计的Vue 3渲染器，它集成了微软Monaco编辑器，提供实时更新、无闪烁的高性能代码块渲染体验。无论你是构建AI对话界面、技术文档平台，还是代码展示工具，markstream-vue都能让你的代码编辑器体验提升到一个全新水平。
+     为什么选择markstream-vue的Monaco代码块？
+markstream-vue不仅仅是另一个 Markdown 渲染器——它是专门为 流式内容 和 实时更新 设计的现代解决方案。与传统的静态代码块不同，Monaco集成带来了以下独特优势：
+      实时语法高亮  - 代码在输入时即时高亮，无延迟感 ⚡  增量更新  - 大型代码块也能平滑渲染，避免页面卡顿       完全可编辑  - 支持用户直接在浏览器中编辑代码       主题定制  - 轻松适配你的应用主题风格       响应式设计  - 在各种设备上都能完美显示
+     快速安装与配置
+开始使用markstream-vue的Monaco功能非常简单。首先安装核心依赖：
+pnpm add markstream-vue stream-monaco
+# 或
+npm install markstream-vue stream-monaco
+bash
+Vite配置优化
+对于Vite项目，建议配置Monaco worker以确保生产环境正常运行：
+// vite.config.js
+import  { defineConfig }  from 'vite'
+import  monacoEditorPlugin  from 'vite-plugin-monaco-editor-esm'
+export default defineConfig ({
+plugins : [
+monacoEditorPlugin ({
+languageWorkers : [ 'editorWorkerService' ,  'typescript' ,  'css' ,  'html' ,  'json' ]
+    })
+  ]
+})
+javascript
+运行
+     三种代码块渲染模式
+markstream-vue提供灵活的代码块渲染策略，满足不同场景需求：
+1. Monaco模式（推荐）
+安装 stream-monaco 后，代码块自动使用Monaco编辑器渲染，支持语法高亮、智能提示和编辑功能。
+2. Shiki模式
+安装 stream-markdown 并使用 MarkdownCodeBlockNode 组件，提供轻量级的语法高亮方案。
+3. 基础回退模式
+无需额外依赖，渲染为标准的 <pre><code> 标签，适合简单场景。
+⚡ 性能优化技巧
+markstream-vue在设计时就考虑了性能优化，以下是一些实用建议：
+预加载Monaco运行时
+为了避免首次渲染时的闪烁，可以在应用初始化时预加载：
+import  { preloadCodeBlockRuntime }  from 'markstream-vue'
+void preloadCodeBlockRuntime ()
+javascript
+运行
+虚拟化长文档
+对于包含大量代码的长文档，启用虚拟化可以显著提升性能：
+<MarkdownRender   :content="longDocument"   :max-live-nodes="220"   :live-node-buffer="40"   :defer-nodes-until-visible="true" /> 
+vue
+批量渲染控制
+通过调整批量渲染参数，可以优化流式内容的显示效果：
+<MarkdownRender   :content="streamingContent"   :batch-rendering="true"   :initial-render-batch-size="12"   :render-batch-size="24"   :render-batch-delay="20" /> 
+vue
+     自定义语言和主题
+markstream-vue支持扩展Monaco的语言支持和主题定制：
+添加额外语言
+默认只包含常用语言，如需支持Rust、Go等语言，可以通过配置添加：
+const  monacoOptions = {
+languages : [ 'javascript' ,  'python' ,  'rust' ,  'go' ,  'shell' ],
+themes : [customDarkTheme, customLightTheme],
+theme :  'custom-dark'
+}
+javascript
+运行
+自定义主题
+你可以完全控制代码编辑器的外观：
+const  docsDark = {
+name :  'docs-dark' ,
+base :  'vs-dark' ,
+inherit :  true ,
+colors : {
+'editor.background' :  '#05060a' ,
+'editor.foreground' :  '#e6edf3'
+  }
+}
+javascript
+运行
+     高级功能：Diff对比
+markstream-vue的Monaco集成还支持代码差异对比功能，非常适合代码审查场景：
+<MarkdownRender   :content="diffContent"   :code-block-monaco-options="{     diffHunkActionsOnHover: true,     diffHunkHoverHideDelayMs: 240,     onDiffHunkAction: handleDiffAction   }" /> 
+vue
+     常见问题与解决方案
+Vue CLI 4（ Webpack  4）兼容性
+如果使用Vue CLI 4，建议切换到Shiki模式或升级到Webpack 5。Webpack 4不支持Monaco的现代模块系统。
+性能问题
+如果遇到性能问题，可以：
+启用 deferNodesUntilVisibl...
