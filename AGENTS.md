@@ -14,3 +14,6 @@
 
 ## What Didn't Work
 - ❌ vue-element-plus-x named exports (ChatBubble, Typewriter, Message) — package only provides default export and individual component files under types/components/; switched to manual message layout with MarkStream for content rendering
+
+## Lessons
+- GitHub CLI (`gh`) is not available in sandbox; use curl + GitHub API for repo creation and git push with token-authenticated remote URL

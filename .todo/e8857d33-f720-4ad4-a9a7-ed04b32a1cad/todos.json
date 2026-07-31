@@ -17,11 +17,11 @@
   {
     "content": "创建 GitHub 仓库 ai-chat-demo-by-meoo",
     "id": "4",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "推送代码到 GitHub",
     "id": "5",
-    "status": "pending"
+    "status": "completed"
   }
 ]
