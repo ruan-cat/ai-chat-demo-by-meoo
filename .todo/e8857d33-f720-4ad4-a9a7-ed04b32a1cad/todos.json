@@ -1,0 +1,37 @@
+[
+  {
+    "content": "创建 Vue3 + TS + Vite 项目骨架",
+    "id": "1",
+    "status": "completed"
+  },
+  {
+    "content": "安装依赖：vue-element-plus-x, markstream-vue, stream-markdown, element-plus",
+    "id": "2",
+    "status": "completed"
+  },
+  {
+    "content": "配置 vite.config.ts 和端口 3015",
+    "id": "3",
+    "status": "completed"
+  },
+  {
+    "content": "编写 AI 对话框组件（含流式 Markdown 渲染）",
+    "id": "4",
+    "status": "completed"
+  },
+  {
+    "content": "编写主页面入口",
+    "id": "5",
+    "status": "completed"
+  },
+  {
+    "content": "pnpm run build 验证构建",
+    "id": "6",
+    "status": "completed"
+  },
+  {
+    "content": "pnpm run dev 启动预览",
+    "id": "7",
+    "status": "completed"
+  }
+]
