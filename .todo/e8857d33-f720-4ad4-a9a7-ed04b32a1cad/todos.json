@@ -1,27 +1,27 @@
 [
   {
-    "content": "创建 ai-chat Edge Function",
+    "content": "安装 GitHub CLI (gh)",
     "id": "1",
     "status": "completed"
   },
   {
-    "content": "部署 Edge Function (verify_jwt: false)",
+    "content": "配置 Git 用户信息",
     "id": "2",
     "status": "completed"
   },
   {
-    "content": "创建前端 AI 请求封装",
+    "content": "初始化 Git 仓库并提交代码",
     "id": "3",
-    "status": "completed"
+    "status": "in_progress"
   },
   {
-    "content": "修改 ChatInterface 组件接入真实 AI",
+    "content": "创建 GitHub 仓库 ai-chat-demo-by-meoo",
     "id": "4",
-    "status": "completed"
+    "status": "pending"
   },
   {
-    "content": "pnpm run build 验证构建",
+    "content": "推送代码到 GitHub",
     "id": "5",
-    "status": "completed"
+    "status": "pending"
   }
 ]
